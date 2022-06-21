@@ -1,4 +1,4 @@
-import { url } from '@/tests/mocks'
+import { url, code } from '@/tests/mocks'
 import { AddURLRepository } from '@/domain/contracts/database/repositories'
 import { CodeGenerator } from '@/domain/contracts/gateways'
 import { ShortenURL, shortenURLUseCase } from '@/domain/use-cases'
@@ -8,14 +8,16 @@ import { mock } from 'jest-mock-extended'
 describe('shortenURLUseCase', () => {
   let sut: ShortenURL
   let originalURL: string
+  let codeURL: string
 
   const codeGenerator = mock<CodeGenerator>()
   const urlRepository = mock<AddURLRepository>()
 
   beforeAll(() => {
     originalURL = url()
+    codeURL = code()
 
-    codeGenerator.generate.mockResolvedValue('any_code')
+    codeGenerator.generate.mockResolvedValue(codeURL)
   })
 
   beforeEach(() => {
@@ -39,7 +41,7 @@ describe('shortenURLUseCase', () => {
   it('Should call AddURLRepository with correct values', async () => {
     await sut({ originalURL })
 
-    expect(urlRepository.create).toHaveBeenCalledWith({ originalURL, code: 'any_code' })
+    expect(urlRepository.create).toHaveBeenCalledWith({ originalURL, code: codeURL })
     expect(urlRepository.create).toHaveBeenCalledTimes(1)
   })
 })
