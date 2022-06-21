@@ -52,4 +52,10 @@ describe('shortenURLUseCase', () => {
 
     await expect(promise).rejects.toThrow(new Error())
   })
+
+  it('Should return code on success', async () => {
+    const result = await sut({ originalURL })
+
+    expect(result).toEqual(codeURL)
+  })
 })
