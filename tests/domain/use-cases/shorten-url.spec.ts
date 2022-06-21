@@ -44,4 +44,12 @@ describe('shortenURLUseCase', () => {
     expect(urlRepository.create).toHaveBeenCalledWith({ originalURL, code: codeURL })
     expect(urlRepository.create).toHaveBeenCalledTimes(1)
   })
+
+  it('Should rethrow if AddURLRepository throws', async () => {
+    urlRepository.create.mockRejectedValueOnce(new Error())
+
+    const promise = sut({ originalURL })
+
+    await expect(promise).rejects.toThrow(new Error())
+  })
 })
