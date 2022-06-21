@@ -17,4 +17,12 @@ describe('shortenURLUseCase', () => {
 
     expect(codeGenerator.generate).toHaveBeenCalledTimes(1)
   })
+
+  it('Should rethrow if CodeGenerator throws', async () => {
+    codeGenerator.generate.mockRejectedValueOnce(new Error())
+
+    const promise = sut({ url: 'http://any_url.com' })
+
+    await expect(promise).rejects.toThrow(new Error())
+  })
 })
