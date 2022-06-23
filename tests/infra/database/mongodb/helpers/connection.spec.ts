@@ -17,6 +17,10 @@ describe('MongoConnection', () => {
     mocked(MongoClient).mockImplementation(jest.fn().mockImplementation(() => ({ connect: connectSpy, close: closeSpy })))
   })
 
+  afterAll(async () => {
+    await sut.disconnect()
+  })
+
   it('Should have only one instance', () => {
     expect(sut).toBe(MongoConnection.getInstance())
   })
