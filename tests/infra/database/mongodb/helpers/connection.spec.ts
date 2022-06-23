@@ -10,11 +10,12 @@ describe('MongoConnection', () => {
   let sut: MongoConnection
 
   const connectSpy: jest.Mock = jest.fn()
+  const closeSpy: jest.Mock = jest.fn()
 
   beforeAll(() => {
     sut = MongoConnection.getInstance()
 
-    mocked(MongoClient).mockImplementation(jest.fn().mockImplementation(() => ({ connect: connectSpy })))
+    mocked(MongoClient).mockImplementation(jest.fn().mockImplementation(() => ({ connect: connectSpy, close: closeSpy })))
   })
 
   afterAll(() => {
@@ -29,5 +30,13 @@ describe('MongoConnection', () => {
     await sut.connect(process.env.MONGO_URL!)
 
     expect(connectSpy).toHaveBeenCalled()
+  })
+
+  it('Should close connection if already exists', async () => {
+    await sut.connect(process.env.MONGO_URL!)
+
+    await sut.disconnect()
+
+    expect(closeSpy).toHaveBeenCalled()
   })
 })
