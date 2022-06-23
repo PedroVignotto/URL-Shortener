@@ -2,7 +2,6 @@ import { MongoConnection } from '@/infra/database/mongodb/helpers'
 
 import { MongoClient } from 'mongodb'
 import { mocked } from 'jest-mock'
-import fs from 'fs'
 
 jest.mock('mongodb')
 
@@ -16,10 +15,6 @@ describe('MongoConnection', () => {
     sut = MongoConnection.getInstance()
 
     mocked(MongoClient).mockImplementation(jest.fn().mockImplementation(() => ({ connect: connectSpy, close: closeSpy })))
-  })
-
-  afterAll(() => {
-    fs.unlink(process.cwd() + '/globalConfig.json', () => {})
   })
 
   it('Should have only one instance', () => {
