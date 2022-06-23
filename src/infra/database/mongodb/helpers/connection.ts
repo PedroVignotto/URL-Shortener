@@ -12,6 +12,12 @@ export class MongoConnection {
   }
 
   public async connect (uri: string): Promise<void> {
-    this.connection = await new MongoClient(uri).connect()
+    this.connection = new MongoClient(uri)
+    await this.connection.connect()
+  }
+
+  public async disconnect (): Promise<void> {
+    await this.connection?.close()
+    this.connection = null
   }
 }
