@@ -1,12 +1,12 @@
 import { url, code } from '@/tests/mocks'
 import { AddURLRepository } from '@/domain/contracts/database/repositories'
 import { CodeGenerator } from '@/domain/contracts/gateways'
-import { ShortenURL, shortenURLUseCase } from '@/domain/use-cases'
+import { AddShortenURL, addShortenURLUseCase } from '@/domain/use-cases'
 
 import { mock } from 'jest-mock-extended'
 
-describe('shortenURLUseCase', () => {
-  let sut: ShortenURL
+describe('addShortenURLUseCase', () => {
+  let sut: AddShortenURL
   let originalURL: string
   let codeURL: string
 
@@ -21,7 +21,7 @@ describe('shortenURLUseCase', () => {
   })
 
   beforeEach(() => {
-    sut = shortenURLUseCase(codeGenerator, urlRepository)
+    sut = addShortenURLUseCase(codeGenerator, urlRepository)
   })
 
   it('Should call CodeGenerator', async () => {
