@@ -56,4 +56,12 @@ describe('MongoConnection', () => {
     expect(dbSpy).not.toHaveBeenCalled()
     expect(() => sut.getCollection('any_collection')).toThrow(new ConnectionNotFoundError())
   })
+
+  it('Should get collection', async () => {
+    await sut.connect(process.env.MONGO_URL!)
+
+    sut.getCollection('any_collection')
+
+    expect(dbSpy).toHaveBeenCalled()
+  })
 })
