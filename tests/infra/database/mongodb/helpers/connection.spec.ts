@@ -20,6 +20,10 @@ describe('MongoConnection', () => {
     mocked(MongoClient).mockImplementation(jest.fn().mockImplementation(() => ({ connect: connectSpy, close: closeSpy, db: dbSpy })))
   })
 
+  beforeEach(async () => {
+    await sut.connect(process.env.MONGO_URL!)
+  })
+
   afterAll(async () => {
     await sut.disconnect()
   })
@@ -29,22 +33,16 @@ describe('MongoConnection', () => {
   })
 
   it('Should create a new connection', async () => {
-    await sut.connect(process.env.MONGO_URL!)
-
     expect(connectSpy).toHaveBeenCalled()
   })
 
   it('Should close connection if already exists', async () => {
-    await sut.connect(process.env.MONGO_URL!)
-
     await sut.disconnect()
 
     expect(closeSpy).toHaveBeenCalled()
   })
 
   it('Should close connection if already exists', async () => {
-    await sut.connect(process.env.MONGO_URL!)
-
     await sut.disconnect()
 
     expect(closeSpy).toHaveBeenCalled()
@@ -58,8 +56,6 @@ describe('MongoConnection', () => {
   })
 
   it('Should get collection', async () => {
-    await sut.connect(process.env.MONGO_URL!)
-
     sut.getCollection('any_collection')
 
     expect(dbSpy).toHaveBeenCalled()
