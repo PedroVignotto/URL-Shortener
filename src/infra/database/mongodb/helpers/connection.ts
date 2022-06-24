@@ -1,6 +1,6 @@
 import { ConnectionNotFoundError } from '@/infra/database/mongodb/errors'
 
-import { MongoClient } from 'mongodb'
+import { Collection, MongoClient } from 'mongodb'
 
 export class MongoConnection {
   private static instance?: MongoConnection
@@ -23,7 +23,8 @@ export class MongoConnection {
     this.connection = null
   }
 
-  public getCollection (collectionName: string): void {
+  public getCollection (collectionName: string): Collection {
     if (!this.connection) throw new ConnectionNotFoundError()
+    return this.connection.db().collection(collectionName)
   }
 }
