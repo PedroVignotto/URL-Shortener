@@ -1,9 +1,9 @@
 import { AddURLRepository } from '@/domain/contracts/database/repositories'
-import { MongoConnection } from '@/infra/database/mongodb/helpers'
+import { Collection } from '@/infra/database/mongodb/repositories/collection'
 
-export class URLRepository implements AddURLRepository {
+export class URLRepository extends Collection implements AddURLRepository {
   async create ({ originalURL, code }: AddURLRepository.Input): Promise<AddURLRepository.Output> {
-    const urlCollection = MongoConnection.getInstance().getCollection('urls')
+    const urlCollection = this.getCollection('urls')
     await urlCollection.insertOne({ originalURL, code })
   }
 }
