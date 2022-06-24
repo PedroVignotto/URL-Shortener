@@ -1,3 +1,5 @@
+import { ConnectionNotFoundError } from '@/infra/database/mongodb/errors'
+
 import { MongoClient } from 'mongodb'
 
 export class MongoConnection {
@@ -19,5 +21,9 @@ export class MongoConnection {
   public async disconnect (): Promise<void> {
     await this.connection?.close()
     this.connection = null
+  }
+
+  public getCollection (collectionName: string): void {
+    if (!this.connection) throw new ConnectionNotFoundError()
   }
 }
