@@ -3,7 +3,6 @@ import { Collection } from '@/infra/database/mongodb/repositories/collection'
 
 export class URLRepository extends Collection implements AddURLRepository {
   async create ({ originalURL, code }: AddURLRepository.Input): Promise<AddURLRepository.Output> {
-    const urlCollection = this.getCollection('urls')
-    await urlCollection.insertOne({ originalURL, code })
+    await this.getCollection('urls').insertOne({ originalURL, code })
   }
 }
