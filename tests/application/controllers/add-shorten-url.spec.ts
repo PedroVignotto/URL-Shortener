@@ -4,8 +4,10 @@ import { RequiredFieldError } from '@/application/errors'
 describe('AddShortenURLController', () => {
   let sut: AddShortenURLController
 
+  const addShortenURL: jest.Mock = jest.fn()
+
   beforeEach(() => {
-    sut = new AddShortenURLController()
+    sut = new AddShortenURLController(addShortenURL)
   })
 
   it('Should return 400 if originalURL does not provided', async () => {
@@ -13,5 +15,12 @@ describe('AddShortenURLController', () => {
 
     expect(statusCode).toBe(400)
     expect(data).toEqual(new RequiredFieldError('originalURL'))
+  })
+
+  it('Should call addShortenURL with correct value', async () => {
+    await sut.handle({ originalURL: 'any_url' })
+
+    expect(addShortenURL).toHaveBeenCalledWith({ originalURL: 'any_url' })
+    expect(addShortenURL).toHaveBeenCalledTimes(1)
   })
 })
