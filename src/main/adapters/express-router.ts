@@ -6,7 +6,8 @@ export class ExpressRouter {
   constructor (private readonly controller: Controller) {}
 
   async adapt (req: Request, res: Response): Promise<void> {
-    const { data } = await this.controller.handle({ ...req.body })
-    res.status(200).json(data)
+    const { statusCode, data } = await this.controller.handle({ ...req.body })
+    const json = [200, 201].includes(statusCode) ? data : { error: data.message }
+    res.status(statusCode).json(json)
   }
 }
