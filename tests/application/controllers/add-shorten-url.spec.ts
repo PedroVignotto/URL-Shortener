@@ -6,6 +6,10 @@ describe('AddShortenURLController', () => {
 
   const addShortenURL: jest.Mock = jest.fn()
 
+  beforeAll(() => {
+    addShortenURL.mockResolvedValue('any_code')
+  })
+
   beforeEach(() => {
     sut = new AddShortenURLController(addShortenURL)
   })
@@ -31,5 +35,12 @@ describe('AddShortenURLController', () => {
 
     expect(statusCode).toBe(500)
     expect(data).toEqual(new ServerError(new Error()))
+  })
+
+  it('Should return 201 with shortened URL on success', async () => {
+    const { statusCode, data } = await sut.handle({ originalURL: 'any_url' })
+
+    expect(statusCode).toBe(201)
+    expect(data).toEqual({ shortURL: `${process.env.APP_URL!}/any_code` })
   })
 })
