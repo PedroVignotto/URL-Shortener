@@ -3,7 +3,7 @@ import { ServerError } from '@/application/errors'
 export type HttpResponse<T = any> = { statusCode: number, data: T }
 
 export const created = (): HttpResponse => ({
-  statusCode: 204,
+  statusCode: 201,
   data: null
 })
 
