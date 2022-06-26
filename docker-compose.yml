@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  mongo:
+    container_name: mongo
+    image: mongo:4
+    restart: always
+    volumes:
+      - ./data:/data/db
+    ports:
+      - 27017:27017
+  app:
+    container_name: api-url-shortener
+    image: node:16
+    working_dir: /usr/app
+    command: bash -c "npm install && npm run dev"
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/app
+    links:
+      - mongo
