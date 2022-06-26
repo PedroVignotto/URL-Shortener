@@ -3,7 +3,7 @@ import { badRequest, created, HttpResponse, serverError } from '@/application/he
 import { AddShortenURL } from '@/domain/use-cases'
 
 type HttpRequest = { originalURL: string }
-type Model = undefined | Error
+type Model = { shortURL: string } | Error
 
 export class AddShortenURLController {
   constructor (private readonly addShortenURL: AddShortenURL) {}
@@ -11,8 +11,8 @@ export class AddShortenURLController {
   async handle ({ originalURL }: HttpRequest): Promise<HttpResponse<Model>> {
     try {
       if (!originalURL) return badRequest(new RequiredFieldError('originalURL'))
-      await this.addShortenURL({ originalURL })
-      return created()
+      const code = await this.addShortenURL({ originalURL })
+      return created({ shortURL: `${process.env.APP_URL!}/${code}` })
     } catch (error: unknown) {
       return serverError(error)
     }
