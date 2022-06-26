@@ -1,5 +1,6 @@
 import { generateRandomURL } from '@/tests/mocks'
 import { app } from '@/main/config/app'
+import { RequiredFieldError } from '@/application/errors'
 import { MongoConnection } from '@/infra/database/mongodb/helpers'
 
 import request from 'supertest'
@@ -24,6 +25,13 @@ describe('AddShortenURL routes', () => {
       const { status } = await request(app).post('/api/url').send({ originalURL })
 
       expect(status).toBe(201)
+    })
+
+    it('Should return 400 if originalURL does not provided', async () => {
+      const { status, body: { error } } = await request(app).post('/api/url').send({ originalURL: null as any })
+
+      expect(status).toBe(400)
+      expect(error).toBe(new RequiredFieldError('originalURL').message)
     })
   })
 })
