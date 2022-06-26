@@ -37,6 +37,15 @@ describe('AddShortenURLController', () => {
     expect(data).toEqual(new ServerError(new Error()))
   })
 
+  it('Should return 500 if addShortenURL throws a non error object', async () => {
+    addShortenURL.mockRejectedValueOnce('any_error')
+
+    const { statusCode, data } = await sut.handle({ originalURL: 'any_url' })
+
+    expect(statusCode).toBe(500)
+    expect(data).toEqual(new ServerError())
+  })
+
   it('Should return 201 with shortened URL on success', async () => {
     const { statusCode, data } = await sut.handle({ originalURL: 'any_url' })
 
