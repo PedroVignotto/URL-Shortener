@@ -3,6 +3,7 @@ module.exports = {
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/main/**',
     '<rootDir>/src/main/middlewares/**',
+    '<rootDir>/src/main/adapters/**',
     '!<rootDir>/src/**/index.ts'
   ],
   coverageDirectory: 'coverage',
