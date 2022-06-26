@@ -1,6 +1,9 @@
 import './config/module-alias'
-import { app } from '@/main/config/app'
+import { MongoConnection } from '@/infra/database/mongodb/helpers'
 
 import 'dotenv/config'
 
-app.listen(process.env.PORT, () => console.log(`Server is running at ${process.env.APP_URL!}`))
+MongoConnection.getInstance().connect(process.env.MONGO_URL!).then(async () => {
+  const { app } = await import('@/main/config/app')
+  app.listen(process.env.PORT, () => console.log(`Server is running at ${process.env.APP_URL!}`))
+}).catch(console.error)
