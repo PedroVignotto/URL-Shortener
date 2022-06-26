@@ -1,6 +1,6 @@
 import { generateRandomURL, generateRandomCode } from '@/tests/mocks'
-import { AddShortenURLController } from '@/application/controllers'
-import { RequiredFieldError, ServerError } from '@/application/errors'
+import { Controller, AddShortenURLController } from '@/application/controllers'
+import { RequiredFieldError } from '@/application/errors'
 
 describe('AddShortenURLController', () => {
   let sut: AddShortenURLController
@@ -20,6 +20,10 @@ describe('AddShortenURLController', () => {
     sut = new AddShortenURLController(addShortenURL)
   })
 
+  it('Should extend Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
+  })
+
   it('Should return 400 if originalURL does not provided', async () => {
     const { statusCode, data } = await sut.handle({ originalURL: null as any })
 
@@ -32,24 +36,6 @@ describe('AddShortenURLController', () => {
 
     expect(addShortenURL).toHaveBeenCalledWith({ originalURL })
     expect(addShortenURL).toHaveBeenCalledTimes(1)
-  })
-
-  it('Should return 500 if addShortenURL throws', async () => {
-    addShortenURL.mockRejectedValueOnce(new Error())
-
-    const { statusCode, data } = await sut.handle({ originalURL })
-
-    expect(statusCode).toBe(500)
-    expect(data).toEqual(new ServerError(new Error()))
-  })
-
-  it('Should return 500 if addShortenURL throws a non error object', async () => {
-    addShortenURL.mockRejectedValueOnce('any_error')
-
-    const { statusCode, data } = await sut.handle({ originalURL })
-
-    expect(statusCode).toBe(500)
-    expect(data).toEqual(new ServerError())
   })
 
   it('Should return 201 with shortened URL on success', async () => {
