@@ -20,7 +20,7 @@ describe('AddShortenURL routes', () => {
     await mongoConnection.disconnect()
   })
 
-  describe('POST /accounts', () => {
+  describe('POST /url', () => {
     it('Should return 201 on success', async () => {
       const { status } = await request(app).post('/api/url').send({ originalURL })
 
