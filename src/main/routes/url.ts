@@ -1,5 +1,8 @@
+import { ExpressRouter as Adapter } from '@/main/adapters'
+import { makeAddShortenURLController } from '@/main/factories/application/controllers'
+
 import { Router } from 'express'
 
 export default (router: Router): void => {
-  router.get('/url', (req, res) => { res.send() })
+  router.post('/url', new Adapter(makeAddShortenURLController()).adapt)
 }
