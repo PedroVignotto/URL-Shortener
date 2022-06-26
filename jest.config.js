@@ -2,6 +2,7 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/main/**',
+    '<rootDir>/src/main/middlewares/**',
     '!<rootDir>/src/**/index.ts'
   ],
   coverageDirectory: 'coverage',
@@ -11,7 +12,6 @@ module.exports = {
     '@/(.+)': '<rootDir>/src/$1'
   },
   preset: '@shelf/jest-mongodb',
-  testMatch: ['**/*.spec.ts'],
   roots: ['<rootDir>/src', '<rootDir>/tests'],
   transform: { '\\.ts$': 'ts-jest' },
   setupFiles: ['dotenv/config'],
