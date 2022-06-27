@@ -1,11 +1,19 @@
+import { generateRandomCode } from '@/tests/mocks'
 import { Controller, RedirectToOriginalURLController } from '@/application/controllers'
 import { RequiredFieldError } from '@/application/errors'
 
 describe('RedirectToOriginalURLController', () => {
   let sut: RedirectToOriginalURLController
+  let code: string
+
+  const redirectToOriginalURL: jest.Mock = jest.fn()
+
+  beforeAll(() => {
+    code = generateRandomCode()
+  })
 
   beforeEach(() => {
-    sut = new RedirectToOriginalURLController()
+    sut = new RedirectToOriginalURLController(redirectToOriginalURL)
   })
 
   it('Should extend Controller', async () => {
@@ -17,5 +25,12 @@ describe('RedirectToOriginalURLController', () => {
 
     expect(statusCode).toBe(400)
     expect(data).toEqual(new RequiredFieldError('code'))
+  })
+
+  it('Should call redirectToOriginalURL with correct value', async () => {
+    await sut.handle({ code })
+
+    expect(redirectToOriginalURL).toHaveBeenCalledWith({ code })
+    expect(redirectToOriginalURL).toHaveBeenCalledTimes(1)
   })
 })
