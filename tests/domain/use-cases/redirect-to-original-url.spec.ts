@@ -37,4 +37,12 @@ describe('redirectToOriginalURLUseCase', () => {
 
     await expect(promise).rejects.toThrow(new FieldNotFoundError('code'))
   })
+
+  it('Should rethrow if LoadURLByCodeRepository throws', async () => {
+    urlRepository.loadByCode.mockRejectedValueOnce(new Error())
+
+    const promise = sut({ code })
+
+    await expect(promise).rejects.toThrow(new Error())
+  })
 })
