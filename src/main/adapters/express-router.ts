@@ -11,5 +11,7 @@ export const expressRouterAdapter: Adapter = controller => async (req, res) => {
 }
 
 export const expressRedirectRouterAdapter: Adapter = controller => async (req, res) => {
-  await controller.handle({ ...req.params })
+  const { statusCode, data } = await controller.handle({ ...req.params })
+
+  if (statusCode === 200) res.redirect(data)
 }
