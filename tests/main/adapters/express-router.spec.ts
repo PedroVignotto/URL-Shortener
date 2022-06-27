@@ -1,6 +1,6 @@
 import { generateRandomFieldName, generateRandomValue } from '@/tests/mocks'
 import { Controller } from '@/application/controllers'
-import { expressRouterAdapter } from '@/main/adapters'
+import { expressRedirectRouterAdapter, expressRouterAdapter } from '@/main/adapters'
 
 import { getMockReq, getMockRes } from '@jest-mock/express'
 import { NextFunction, Request, RequestHandler, Response } from 'express'
@@ -21,42 +21,64 @@ describe('ExpressRouterAdapter', () => {
 
     key = generateRandomFieldName()
     value = generateRandomValue()
-    req = getMockReq({ body: { [key]: value } })
     res = getMockRes().res
     next = getMockRes().next
 
     controller.handle.mockResolvedValue({ statusCode: 200, data: { data: value } })
   })
 
-  it('Should call handle with correct request', async () => {
-    await sut(req, res, next)
+  describe('expressRouterAdapter', () => {
+    beforeEach(() => {
+      sut = expressRouterAdapter(controller)
 
-    expect(controller.handle).toHaveBeenCalledWith({ [key]: value })
-    expect(controller.handle).toHaveBeenCalledTimes(1)
+      req = getMockReq({ body: { [key]: value } })
+    })
+
+    it('Should call handle with correct request', async () => {
+      await sut(req, res, next)
+
+      expect(controller.handle).toHaveBeenCalledWith({ [key]: value })
+      expect(controller.handle).toHaveBeenCalledTimes(1)
+    })
+
+    it('Should call handle with empty request', async () => {
+      req = getMockReq()
+
+      await sut(req, res, next)
+
+      expect(controller.handle).toHaveBeenCalledWith({})
+      expect(controller.handle).toHaveBeenCalledTimes(1)
+    })
+
+    it('Should respond with correct statusCode and data on success', async () => {
+      await sut(req, res, next)
+
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith({ data: value })
+    })
+
+    it('Should respond with correct statusCode and error on failure', async () => {
+      controller.handle.mockResolvedValueOnce({ statusCode: 400, data: new Error() })
+
+      await sut(req, res, next)
+
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith({ error: new Error().message })
+    })
   })
 
-  it('Should call handle with empty request', async () => {
-    req = getMockReq()
+  describe('expressRedirectRouterAdapter', () => {
+    beforeEach(() => {
+      sut = expressRedirectRouterAdapter(controller)
 
-    await sut(req, res, next)
+      req = getMockReq({ params: { [key]: value } })
+    })
 
-    expect(controller.handle).toHaveBeenCalledWith({})
-    expect(controller.handle).toHaveBeenCalledTimes(1)
-  })
+    it('Should call handle with correct request', async () => {
+      await sut(req, res, next)
 
-  it('Should respond with correct statusCode and data on success', async () => {
-    await sut(req, res, next)
-
-    expect(res.status).toHaveBeenCalledWith(200)
-    expect(res.json).toHaveBeenCalledWith({ data: value })
-  })
-
-  it('Should respond with correct statusCode and error on failure', async () => {
-    controller.handle.mockResolvedValueOnce({ statusCode: 400, data: new Error() })
-
-    await sut(req, res, next)
-
-    expect(res.status).toHaveBeenCalledWith(400)
-    expect(res.json).toHaveBeenCalledWith({ error: new Error().message })
+      expect(controller.handle).toHaveBeenCalledWith({ [key]: value })
+      expect(controller.handle).toHaveBeenCalledTimes(1)
+    })
   })
 })
