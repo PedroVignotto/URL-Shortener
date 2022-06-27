@@ -4,5 +4,5 @@ export interface LoadURLByCodeRepository {
 
 export namespace LoadURLByCodeRepository {
   export type Input = { code: string }
-  export type Output = { originalURL: string }
+  export type Output = string | undefined
 }
