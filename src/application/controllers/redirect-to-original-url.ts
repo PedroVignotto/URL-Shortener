@@ -1,12 +1,17 @@
 import { Controller } from '@/application/controllers'
 import { RequiredFieldError } from '@/application/errors'
-import { badRequest, HttpResponse } from '@/application/helpers'
+import { badRequest, HttpResponse, ok } from '@/application/helpers'
+import { RedirectToOriginalURL } from '@/domain/use-cases'
 
 type HttpRequest = { code: string }
-type Model = Error
+type Model = undefined | Error
 
 export class RedirectToOriginalURLController extends Controller {
+  constructor (private readonly redirectToOriginalURL: RedirectToOriginalURL) { super() }
+
   async perform ({ code }: HttpRequest): Promise<HttpResponse<Model>> {
-    return badRequest(new RequiredFieldError('code'))
+    if (!code) return badRequest(new RequiredFieldError('code'))
+    await this.redirectToOriginalURL({ code })
+    return ok(undefined)
   }
 }
