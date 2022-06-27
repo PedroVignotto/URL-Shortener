@@ -20,17 +20,29 @@ describe('URLRepository', () => {
     urlCollection = mongoConnection.getCollection('urls')
   })
 
-  beforeEach(() => {
+  beforeEach(async () => {
     sut = new URLRepository()
+
+    await urlCollection.deleteMany({})
   })
 
   afterAll(async () => {
     await mongoConnection.disconnect()
   })
 
-  it('Should save url data on success', async () => {
-    await sut.create({ originalURL, code })
+  describe('create()', () => {
+    it('Should save url data on success', async () => {
+      await sut.create({ originalURL, code })
 
-    expect(await urlCollection.findOne({ originalURL })).toBeTruthy()
+      expect(await urlCollection.findOne({ originalURL })).toBeTruthy()
+    })
+  })
+
+  describe('loadByCode()', () => {
+    it('Should return undefined if code does not exists', async () => {
+      const result = await sut.loadByCode({ code })
+
+      expect(result).toBeUndefined()
+    })
   })
 })
