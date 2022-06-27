@@ -1,6 +1,7 @@
 import { generateRandomCode, generateRandomURL } from '@/tests/mocks'
 import { Controller, RedirectToOriginalURLController } from '@/application/controllers'
-import { RequiredFieldError } from '@/application/errors'
+import { NotFoundError, RequiredFieldError } from '@/application/errors'
+import { FieldNotFoundError } from '@/domain/errors'
 
 describe('RedirectToOriginalURLController', () => {
   let sut: RedirectToOriginalURLController
@@ -36,6 +37,15 @@ describe('RedirectToOriginalURLController', () => {
 
     expect(redirectToOriginalURL).toHaveBeenCalledWith({ code })
     expect(redirectToOriginalURL).toHaveBeenCalledTimes(1)
+  })
+
+  it('Should return 404 if redirectToOriginalURL return FieldNotFoundError', async () => {
+    redirectToOriginalURL.mockRejectedValueOnce(new FieldNotFoundError('code'))
+
+    const { statusCode, data } = await sut.handle({ code })
+
+    expect(statusCode).toBe(404)
+    expect(data).toEqual(new NotFoundError())
   })
 
   it('Should return 200 with original URL on success', async () => {
