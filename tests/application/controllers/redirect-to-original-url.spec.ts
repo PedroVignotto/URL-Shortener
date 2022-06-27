@@ -52,6 +52,6 @@ describe('RedirectToOriginalURLController', () => {
     const { statusCode, data } = await sut.handle({ code })
 
     expect(statusCode).toBe(200)
-    expect(data).toEqual({ originalURL })
+    expect(data).toEqual(originalURL)
   })
 })
