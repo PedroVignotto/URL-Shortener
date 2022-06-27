@@ -44,5 +44,13 @@ describe('URLRepository', () => {
 
       expect(result).toBeUndefined()
     })
+
+    it('Should return a originalURL if code already exists', async () => {
+      await urlCollection.insertOne({ originalURL, code })
+
+      const result = await sut.loadByCode({ code })
+
+      expect(result).toEqual(originalURL)
+    })
   })
 })
