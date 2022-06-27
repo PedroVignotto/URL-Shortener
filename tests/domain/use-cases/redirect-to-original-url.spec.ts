@@ -45,4 +45,10 @@ describe('redirectToOriginalURLUseCase', () => {
 
     await expect(promise).rejects.toThrow(new Error())
   })
+
+  it('Should return originalURL on success', async () => {
+    const result = await sut({ code })
+
+    expect(result).toEqual(originalURL)
+  })
 })
