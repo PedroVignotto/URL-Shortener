@@ -9,7 +9,7 @@ export class URLRepository extends Collection implements Repositories {
   }
 
   async loadByCode ({ code }: LoadURLByCodeRepository.Input): Promise<LoadURLByCodeRepository.Output> {
-    await this.getCollection('urls').findOne({ code })
-    return undefined
+    const url = await this.getCollection('urls').findOne({ code })
+    return url?.originalURL
   }
 }
