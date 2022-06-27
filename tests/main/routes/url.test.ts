@@ -22,13 +22,13 @@ describe('AddShortenURL routes', () => {
 
   describe('POST /url', () => {
     it('Should return 201 on success', async () => {
-      const { status } = await request(app).post('/api/url').send({ originalURL })
+      const { status } = await request(app).post('/url').send({ originalURL })
 
       expect(status).toBe(201)
     })
 
     it('Should return 400 if originalURL does not provided', async () => {
-      const { status, body: { error } } = await request(app).post('/api/url').send({ originalURL: null as any })
+      const { status, body: { error } } = await request(app).post('/url').send({ originalURL: null as any })
 
       expect(status).toBe(400)
       expect(error).toBe(new RequiredFieldError('originalURL').message)

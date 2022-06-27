@@ -9,5 +9,5 @@ export const setupRoutes = (app: Express): void => {
     .filter(file => !file.endsWith('.map'))
     .map(async file => { (await import(`../routes/${file}`)).default(router) })
 
-  app.use('/api', router)
+  app.use(router)
 }
