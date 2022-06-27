@@ -80,5 +80,13 @@ describe('ExpressRouterAdapter', () => {
       expect(controller.handle).toHaveBeenCalledWith({ [key]: value })
       expect(controller.handle).toHaveBeenCalledTimes(1)
     })
+
+    it('Should respond with correct data on success', async () => {
+      controller.handle.mockResolvedValueOnce({ statusCode: 200, data: value })
+
+      await sut(req, res, next)
+
+      expect(res.redirect).toHaveBeenCalledWith(value)
+    })
   })
 })
