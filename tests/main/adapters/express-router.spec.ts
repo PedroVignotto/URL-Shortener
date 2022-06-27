@@ -88,5 +88,14 @@ describe('ExpressRouterAdapter', () => {
 
       expect(res.redirect).toHaveBeenCalledWith(value)
     })
+
+    it('Should respond with correct statusCode and error on failure', async () => {
+      controller.handle.mockResolvedValueOnce({ statusCode: 404, data: new Error() })
+
+      await sut(req, res, next)
+
+      expect(res.status).toHaveBeenCalledWith(404)
+      expect(res.json).toHaveBeenCalledWith({ error: new Error().message })
+    })
   })
 })
