@@ -1,4 +1,4 @@
-import { ServerError } from '@/application/errors'
+import { NotFoundError, ServerError } from '@/application/errors'
 
 export type HttpResponse<T = any> = { statusCode: number, data: T }
 
@@ -15,6 +15,11 @@ export const created = <T = any> (data: T): HttpResponse<T> => ({
 export const badRequest = (error: Error): HttpResponse<Error> => ({
   statusCode: 400,
   data: error
+})
+
+export const notFound = (): HttpResponse<Error> => ({
+  statusCode: 404,
+  data: new NotFoundError()
 })
 
 export const serverError = (error: unknown): HttpResponse<Error> => ({
