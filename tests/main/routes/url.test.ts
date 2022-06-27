@@ -1,6 +1,6 @@
 import { generateRandomCode, generateRandomURL } from '@/tests/mocks'
 import { app } from '@/main/config/app'
-import { RequiredFieldError } from '@/application/errors'
+import { NotFoundError, RequiredFieldError } from '@/application/errors'
 import { MongoConnection } from '@/infra/database/mongodb/helpers'
 
 import { Collection } from 'mongodb'
@@ -19,6 +19,10 @@ describe('AddShortenURL routes', () => {
     mongoConnection = MongoConnection.getInstance()
     await mongoConnection.connect(process.env.MONGO_URL!)
     urlCollection = mongoConnection.getCollection('urls')
+  })
+
+  beforeEach(async () => {
+    await urlCollection.deleteMany({})
   })
 
   afterAll(async () => {
@@ -47,6 +51,13 @@ describe('AddShortenURL routes', () => {
       const { status } = await request(app).get(`/${code}`)
 
       expect(status).toBe(302)
+    })
+
+    it('Should return 404 if code does not exist', async () => {
+      const { status, body: { error } } = await request(app).get(`/${code}`)
+
+      expect(status).toBe(404)
+      expect(error).toBe(new NotFoundError().message)
     })
   })
 })
