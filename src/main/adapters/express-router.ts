@@ -9,3 +9,7 @@ export const expressRouterAdapter: Adapter = controller => async (req, res) => {
   const json = [200, 201].includes(statusCode) ? data : { error: data.message }
   res.status(statusCode).json(json)
 }
+
+export const expressRedirectRouterAdapter: Adapter = controller => async (req, res) => {
+  await controller.handle({ ...req.params })
+}
